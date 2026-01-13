@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronos SMP — O Tempo Não Espera</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+@font-face{
+  font-family:'Minecraft';
+  src:url('https://cdn.jsdelivr.net/gh/South-Paw/typeface-minecraft@master/font/minecraft.woff2') format('woff2');
+}
+
+html,body{
+width:100%;
+background:#000;
+color:#fff;
+font-family:'Minecraft','Inter',sans-serif;
+overflow-x:hidden;
+}
+
+:root{
+--bg:#000;
+--bg-soft:#050505;
+--card:#0c0c0c;
+--line:#141414;
+--muted:#9a9a9a;
+--danger:#ff3b3b;
+}
+
+section{padding:180px 8vw}
+h2{font-size:3.8rem;font-weight:900;letter-spacing:-3px}
+p{font-family:'Inter',sans-serif;opacity:.85;line-height:1.9}
+
+/* ================= NAV ================= */
+nav{
+position:fixed;top:0;left:0;
+width:100%;height:90px;
+display:flex;justify-content:space-between;align-items:center;
+padding:0 6vw;
+background:rgba(0,0,0,.7);
+backdrop-filter:blur(14px);
+border-bottom:1px solid var(--line);
+z-index:1000;
+}
+nav ul{display:flex;gap:45px;list-style:none}
+nav a{color:#fff;text-decoration:none;font-size:.75rem;letter-spacing:4px;opacity:.6}
+nav a:hover{opacity:1}
+
+/* ================= HERO ================= */
+.hero{height:100vh;position:relative;overflow:hidden}
+.hero-gif{
+position:absolute;
+top:50%;left:50%;
+min-width:100%;min-height:100%;
+transform:translate(-50%,-50%);
+object-fit:cover;
+filter:brightness(.35);
+}
+.hero::after{
+content:"";position:absolute;inset:0;
+background:
+radial-gradient(circle at center,rgba(255,255,255,.08),transparent 60%),
+linear-gradient(to bottom,rgba(0,0,0,.2),#000 90%);
+}
+.hero-content{
+position:relative;z-index:2;
+height:100%;
+display:flex;flex-direction:column;
+justify-content:center;align-items:center;
+text-align:center;
+padding:40px;
+}
+.hero h1{font-size:clamp(4rem,9vw,8rem)}
+.hero p{margin-top:35px;max-width:900px;font-size:1.25rem}
+.hero strong{color:var(--danger)}
+.scroll{position:absolute;bottom:40px;font-size:.7rem;letter-spacing:4px;opacity:.6}
+
+/* ================= CHAMADA ================= */
+.cta{
+margin-top:60px;
+display:flex;gap:30px;flex-wrap:wrap;justify-content:center;
+}
+.cta a{
+padding:18px 40px;
+border:1px solid var(--line);
+text-decoration:none;
+color:#fff;
+font-size:.75rem;
+letter-spacing:4px;
+transition:.3s;
+}
+.cta a.primary{
+background:#fff;
+color:#000;
+font-weight:900;
+}
+.cta a:hover{transform:translateY(-4px)}
+
+/* ================= AO VIVO ================= */
+.live{background:var(--bg-soft)}
+.live-grid{
+margin-top:90px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(420px,1fr));
+gap:60px;
+}
+.live-card{
+background:var(--card);
+border:1px solid var(--line);
+transition:.4s;
+}
+.live-card:hover{transform:translateY(-8px)}
+.live-card iframe{width:100%;height:260px;border:none}
+.live-info{padding:30px}
+.live-tag{color:var(--danger);font-size:.7rem;letter-spacing:4px}
+
+/* ================= POR QUE JOGAR ================= */
+.why{background:#000}
+.why-grid{
+margin-top:90px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:80px;
+}
+.reason{
+border-left:2px solid var(--line);
+padding-left:30px;
+}
+.reason h3{font-size:1.8rem;margin-bottom:20px}
+
+/* ================= IMERSÃO ================= */
+.immersion{background:var(--bg-soft)}
+.quote{
+font-size:2rem;
+max-width:1000px;
+font-weight:900;
+letter-spacing:-1px;
+}
+
+/* ================= LINHA DO TEMPO ================= */
+.timeline{background:#000}
+.timeline-grid{
+margin-top:90px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:70px;
+}
+.event{
+background:var(--card);
+border:1px solid var(--line);
+padding:45px;
+}
+.event span{
+font-size:.7rem;
+letter-spacing:4px;
+color:var(--muted);
+}
+
+/* ================= CONVITE ================= */
+.join{
+background:radial-gradient(circle at center,rgba(255,255,255,.06),#000 70%);
+text-align:center;
+}
+.join h2{margin-bottom:40px}
+.join p{font-size:1.3rem;max-width:900px;margin:0 auto 60px}
+
+/* ================= FOOTER ================= */
+footer{
+border-top:1px solid var(--line);
+padding:120px 8vw;
+font-size:.75rem;
+opacity:.6;
+text-align:center;
+font-family:'Inter',sans-serif;
+}
+
+/* ================= REVEAL ================= */
+.reveal{opacity:0;transform:translateY(60px);transition:1s ease}
+.reveal.show{opacity:1;transform:none}
+.scroll{
+position:absolute;
+bottom:40px;
+display:flex;
+gap:6px;
+font-size:.7rem;
+letter-spacing:4px;
+opacity:.8;
+}
+
+.scroll span{
+animation:scrollPulse 2s infinite;
+opacity:0;
+}
+
+.scroll span:nth-child(1){animation-delay:0s}
+.scroll span:nth-child(2){animation-delay:.1s}
+.scroll span:nth-child(3){animation-delay:.2s}
+.scroll span:nth-child(4){animation-delay:.3s}
+.scroll span:nth-child(5){animation-delay:.4s}
+.scroll span:nth-child(6){animation-delay:.5s}
+.scroll span.arrow{animation-delay:.7s}
+
+@keyframes scrollPulse{
+0%{opacity:0;transform:translateY(0)}
+30%{opacity:1}
+60%{opacity:1}
+100%{opacity:0;transform:translateY(8px)}
+}
+
+</style>
+</head>
+
+<body>
+
+<nav>
+<div class="logo">CRONOS SMP</div>
+<ul>
+<li><a href="#">INÍCIO</a></li>
+<li><a href="#live">AO VIVO</a></li>
+<li><a href="#why">POR QUE JOGAR</a></li>
+<li><a href="#timeline">HISTÓRIA</a></li>
+</ul>
+</nav>
+
+<header class="hero">
+<img src="https://i.imgur.com/ZNLf2ex.gif" class="hero-gif">
+<div class="hero-content">
+<h1>CRONOS SMP</h1>
+<p>
+Um mundo onde <strong>suas escolhas não podem ser apagadas</strong>.<br>
+Aqui, o tempo observa.
+</p>
+
+<div class="cta">
+<a href="#join" class="primary">QUERO FAZER PARTE</a>
+<a href="#live">ASSISTIR AO VIVO</a>
+</div>
+
+<div class="scroll">
+  <span>S</span><span>C</span><span>R</span><span>O</span><span>L</span><span>L</span>
+  <span class="arrow">↓</span>
+</div>
+</header>
+
+<section id="live" class="live reveal">
+<h2>O MUNDO NÃO PARA</h2>
+<p>Enquanto você lê isso, algo está mudando.</p>
+
+<div class="live-grid">
+<div class="live-card">
+<iframe src="https://player.twitch.tv/?channel=twitch&parent=localhost&muted=true"></iframe>
+<div class="live-info">
+<div class="live-tag">● AO VIVO AGORA</div>
+<h3>Streamer</h3>
+</div>
+</div>
+</div>
+</section>
+
+<section id="why" class="why reveal">
+<h2>POR QUE JOGAR CRONOS?</h2>
+<div class="why-grid">
+<div class="reason">
+<h3>Nada Reseta</h3>
+<p>Construções, erros e decisões permanecem.</p>
+</div>
+<div class="reason">
+<h3>Você Importa</h3>
+<p>O mundo reage a jogadores, não a roteiros.</p>
+</div>
+<div class="reason">
+<h3>História Viva</h3>
+<p>Eventos surgem do caos, não de comandos.</p>
+</div>
+<div class="reason">
+<h3>Consequências Reais</h3>
+<p>Toda escolha cria uma ruptura.</p>
+</div>
+</div>
+</section>
+
+<section class="immersion reveal">
+<p class="quote">
+Alguns mundos te dão liberdade. Cronos te dá responsabilidade.
+</p>
+</section>
+
+<section id="timeline" class="timeline reveal">
+<h2>A HISTÓRIA JÁ COMEÇOU</h2>
+<div class="timeline-grid">
+<div class="event">
+<span>ERA ZERO</span>
+<h3>O Início</h3>
+<p>Um mundo criado fora do fluxo normal do tempo.</p>
+</div>
+<div class="event">
+<span>RUPTURA I</span>
+<h3>A Primeira Escolha</h3>
+<p>Algo foi feito que não podia ser desfeito.</p>
+</div>
+<div class="event">
+<span>AGORA</span>
+<h3>Instabilidade</h3>
+<p>O futuro não está escrito.</p>
+</div>
+</div>
+</section>
+
+<section id="join" class="join reveal">
+<h2>O TEMPO NÃO ESPERA</h2>
+<p>
+Cronos não é para todos.<br>
+É para quem aceita viver com as consequências.
+</p>
+
+<div class="cta">
+<a href="#" class="primary">ENTRAR NO PROJETO</a>
+<a href="#">VER A LORE COMPLETA</a>
+</div>
+</section>
+
+<footer>
+© CRONOS SMP — O TEMPO OBSERVA
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+entries.forEach(e=>{
+if(e.isIntersecting)e.target.classList.add('show')
+})
+},{threshold:.15})
+
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el))
+</script>
+
+</body>
+</html>
